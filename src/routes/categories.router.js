@@ -5,7 +5,7 @@ import joi from "joi";
 const router = express.Router();
 
 const createCategories = joi.object({
-  name: joi.string(),
+  name: joi.string(), //required()하면 joi 오류에 걸림(값을 넣었는데도!!!)
   order: joi.number(),
 });
 
@@ -21,12 +21,11 @@ router.post("/categories", async (req, res) => {
         .json({ errorMessage: "데이터 형식이 올바르지 않습니다." });
     }
 
-    //뭔가 더 논리적으로 깔끔한 코드를 만들 수 있을 것같아. 필요없는 코드 같음...
     const maxOrder = await prisma.Categories.findFirst({
       orderBy: { order: "desc" },
     });
 
-    const orderPlus = maxOrder ? maxOrder.order + 1 : 1; //order + 1 해주기 위함. (id는 따로 있어서 autoincrement불가로 인하여 불가피하게 +1씩 해줌)
+    const orderPlus = maxOrder ? maxOrder.order + 1 : 1; //order+1 해주기 위함. (id는 따로 있어서 autoincrement불가로 인하여 불가피하게 +1씩 해줌)
 
     const category = await prisma.Categories.create({
       data: { name, order: +orderPlus },
@@ -47,6 +46,7 @@ router.get("/categories", async (req, res) => {
         name: true,
         order: true,
       },
+      where: { deletedAt: null },
       orderBy: { order: "asc" },
     });
 
@@ -86,23 +86,13 @@ router.patch("/categories/:categoryId", async (req, res) => {
       });
     }
 
-    console.log(currentCategory.order);
-
-    //기본조건 : 수정한다고 두 order의 값들이 뒤바뀌진않음.
-    //입력받은 order : order
-    //수정할 order: currentCate.order
-    // 1. 기존 order 보다 뒷번호로 교체
-    // 교체되는 order보다 큰 order들 : order-1
-    // 2. 기존 order 보다 앞번호로 교체
-    // 교체되는 order보다 작은 order 값들 : order+1
-
     await prisma.Categories.update({
       data: { name, order },
       where: {
         categoryId: +categoryId,
       },
-      // orderBy: { order: "desc" },
     });
+
     return res.status(200).json({ messge: "카테고리 정보를 수정하였습니다." });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -128,7 +118,13 @@ router.delete("/categories/:categoryId", async (req, res) => {
       return res.status(400).json({ message: "존재하지않는 카테고리입니다." });
     }
 
-    await prisma.Categories.delete({ where: { categoryId: +categoryId } });
+    // await prisma.Categories.delete({ where: { categoryId: +categoryId } });
+    await prisma.Categories.update({
+      data: { deletedAt: new Date() },
+      where: {
+        categoryId: +categoryId,
+      },
+    });
 
     return res.status(200).json({ messge: "카테고리 정보를 삭제하였습니다." });
   } catch (error) {
