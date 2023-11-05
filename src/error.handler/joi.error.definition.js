@@ -8,7 +8,7 @@ const createMenus = joi.object({
   name: joi.string(),
   description: joi.string(),
   image: joi.string(),
-  price: joi.number(),
+  price: joi.number().min(1),
   order: joi.number(),
   status: joi
     .string()
