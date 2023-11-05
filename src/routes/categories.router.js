@@ -4,10 +4,6 @@ import { createCategories } from "../error.handler/joi.error.definition.js";
 
 const router = express.Router();
 
-//라우터 넣어주세요
-
-// https://hanghae00-assets-1.s3.ap-northeast-2.amazonaws.com/sampleIMG.jpg
-
 /* 카테고리 등록 */
 router.post("/categories", async (req, res, next) => {
   try {
