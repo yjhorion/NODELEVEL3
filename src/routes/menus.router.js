@@ -126,7 +126,6 @@ router.patch("/categories/:categoryId/menus/:menuId", async (req, res) => {
 
     const menu = await prisma.menus.findFirst({
       where: { CategoryId: +categoryId, menuId: +menuId },
-      orderBy: { order: "desc" },
     });
 
     if (!menu) {
