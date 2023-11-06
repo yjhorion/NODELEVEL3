@@ -2,6 +2,7 @@ import joi from "joi";
 
 const createCategories = joi.object({
   name: joi.string(),
+  order: joi.number()
 });
 
 const createMenus = joi.object({
