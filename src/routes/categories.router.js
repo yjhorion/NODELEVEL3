@@ -15,12 +15,6 @@ router.post("/categories", async (req, res) => {
     const validation = await createCategories.validateAsync(req.body);
     const { name, order } = validation;
 
-    if (!name) {
-      return res
-        .status(400)
-        .json({ errorMessage: "데이터 형식이 올바르지 않습니다." });
-    }
-
     const maxOrder = await prisma.Categories.findFirst({
       orderBy: { order: "desc" },
     });
@@ -67,12 +61,6 @@ router.patch("/categories/:categoryId", async (req, res) => {
     const { name, order } = validation;
     const { categoryId } = req.params;
 
-    if (!name || !order) {
-      return res
-        .status(400)
-        .json({ message: "데이터 형식이 올바르지 않습니다." });
-    }
-
     const currentCategory = await prisma.Categories.findFirst({
       where: { order: +order },
     });
@@ -103,12 +91,6 @@ router.patch("/categories/:categoryId", async (req, res) => {
 router.delete("/categories/:categoryId", async (req, res) => {
   try {
     const { categoryId } = req.params;
-
-    if (!categoryId) {
-      return res
-        .status(400)
-        .json({ message: "데이터 형식이 올바르지 않습니다." });
-    }
 
     const category = await prisma.Categories.findFirst({
       where: { categoryId: +categoryId },
