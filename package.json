@@ -1,0 +1,21 @@
+{
+  "name": "third_week_lv3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "express": "^4.18.2",
+    "joi": "^17.11.0",
+    "prisma": "^5.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "format": "prettier --write src/*.js src/**/*.js"
+  }
+}
