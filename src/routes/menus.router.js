@@ -52,12 +52,6 @@ router.get("/categories/:categoryId/menus", async (req, res) => {
   try {
     const { categoryId } = req.params;
 
-    if (!categoryId) {
-      return res
-        .status(400)
-        .json({ message: "데이터 형식이 올바르지 않습니다." });
-    }
-
     const menu = await prisma.menus.findMany({
       select: {
         CategoryId: true,
@@ -176,7 +170,6 @@ router.delete("/categories/:categoryId/menus/:menuId", async (req, res) => {
     // await prisma.menus.delete({
     //   where: { CategoryId: +categoryId, menuId: +menuId },
     // });
-    //소프트딜리트를 할 것인가 말 것인가 그것이 문제로다.
     await prisma.menus.update({
       where: { CategoryId: +categoryId, menuId: +menuId },
       data: { deletedAt: new Date() },
